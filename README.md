@@ -13,3 +13,7 @@ The Lite version lacks added error handling features and does not have
 auto-restoring capabilities, it also lacks global configurations.
 
 SuroADB: https://github.com/nicamoq/SuroADB
+
+<p align="center">
+  <img src="https://i.ibb.co/MCtM8K4/Suroadblite.png">
+</p>
