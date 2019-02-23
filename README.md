@@ -11,3 +11,5 @@ slightly improves performance and experience.
 
 The Lite version lacks added error handling features and does not have
 auto-restoring capabilities, it also lacks global configurations.
+
+SuroADB: https://github.com/nicamoq/SuroADB
