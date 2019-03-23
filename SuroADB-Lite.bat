@@ -3,7 +3,7 @@
 :start
 set MYFILES=%USERPROFILE%\AppData\Local\Temp\afolder
 cd "%MYFILES%"
-set ver=1.0
+set ver=2.0
 title SuroADB Lite %ver%
 color 3F
 set bcol=F3
@@ -37,8 +37,8 @@ set instal=%tempdir%\Apk
 :: for package list
 set exportpackage=no
 :: for file push and pullf
-set pullf=NOT_SET
-set pushf=NOT_SET
+set pullf=/sdcard
+set pushf=/sdcard
 
 :: for screenrecord
 set dur=30
@@ -94,7 +94,7 @@ IF %ERRORLEVEL%==10 goto custom
 IF %ERRORLEVEL%==11 goto shell
 IF %ERRORLEVEL%==12 start "%SysRoot%\notepad.exe" "%MYFILES%\suroadb!lite-readme.txt"
 IF %ERRORLEVEL%==13 goto start
-IF %ERRORLEVEL%==14 exit
+IF %ERRORLEVEL%==14 goto exitpr
 goto menu
 
 :devices
@@ -158,7 +158,12 @@ goto uninstall
 :packages
 cls
 color %uicol%
+(
 adb shell pm list packages
+) > "%MYFILES%\packages.txt"
+cls
+start "%SysRoot%\notepad.exe" "%MYFILES%\packages.txt"
+echo Package list saved to "%MYFILES%\packages.txt"
 call Button 2 17 %bcol% "Export to text file" 2 21 FC "                               Back                               " 74 21 %bcol% "@" X _Box _hover
 GetInput /M %_Box% /H 4F
 IF %ERRORLEVEL%==1 goto package-2
@@ -223,59 +228,24 @@ color %uicol%
 echo Select the file
 :pushf33
 rem BrowseFiles
-IF %result%==0 goto menu
-ping localhost -n 2 >nul
-
-set pfpath=%result%
-set pfpath2=%result%
-
-call :pushnm %pfpath%
-exit /b
-
-:pushnm
-set pusname=%~nx1
-
-call :pushpath %pfpath2%
-exit /b
-
-:pushpath
-set puspath=%~dp1
-
+IF %result%=="0" goto menu
+goto push-file2
+:push-file2
 cls
-
-:pushf3prep
-IF NOT EXIST "%wdre%\sroadbtemp\Push" MKDIR "%wdre%\sroadbtemp\Push"
-set pushfvar=%result%
-echo Copying file to a temp folder.. This helps detect errors..
-COPY /Y "%result%" "%wdre%\sroadbtemp\Push" >nul
-IF EXIST "%wdre%\sroadbtemp\Push\%pusname%" goto pushnative2
-ping localhost -n 3 >nul
-echo File name error has been found, switching to workaround..
-COPY /Y "%puspath%%pusname%" "%wdre%\sroadbtemp\Push" >nul
-IF NOT EXIST "%wdre%\sroadbtemp\Push\%pusname%" goto puserror0
-ping localhost -n 3 >nul
-goto pushnative404
-:pushnative404
-cls
-echo A folder named "Push" will be copied to the path you enter.
-echo.
-echo This folder will contain "%pusname%".
+echo Selected: %result%
 echo.
 echo Enter the path to where the folder should go.
-echo ex. %sdconfig%
-echo.
-echo to cancel operation, enter MENU
+echo ex. /sdcard/files
 echo.
 set /p pushf= : 
 cls
-IF /i "%pushf%"=="MENU" RD /S /Q "%tempdir%\Push"
-IF /i "%pushf%"=="MENU" goto menu
+goto push-file3
+:push-file3
 cls
-echo Copying : %tempdir%\Push (contains %pusname%)
-echo To : %pushf%
-adb push "%tempdir%\Push" "%pushf%"
-IF EXIST "%tempdir%\Push" RD /S /Q "%tempdir%\Push"
-IF NOT EXIST "%tempdir%\Push" MKDIR "%tempdir%\Push"
+echo Copying: %result%
+echo To: %pushf%
+echo.
+adb push "%result%" "%pushf%"
 call Button 2 21 FC "                               Back                               " 74 21 %bcol% "@" X _Box _hover
 GetInput /M %_Box% /H 4F
 IF %ERRORLEVEL%==1 goto menu
@@ -286,9 +256,9 @@ color %uicol%
 cls
 set pushff1=folder
 echo Select the folder.
-echo Note: Rename the folder if it has spaces to avoid errors.
+echo.
 rem BrowseFolder
-IF %result%==0 goto menu
+IF "%result%"=="0" goto menu
 goto pushffo
 
 :: FOLDER PUSH
@@ -296,8 +266,8 @@ goto pushffo
 cls
 echo Selected : %result%
 echo.
-echo Enter the path to where the folder should go
-echo ex. %sdconfig%/folders
+echo Enter the path to where the folder should go.
+echo ex. /sdcard/folders
 echo.
 set /p pushf= : 
 cls
@@ -472,5 +442,8 @@ adb shell
 goto shell
 
 
+:exitpr
+cls
+exit
 
 
