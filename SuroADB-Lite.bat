@@ -1,15 +1,37 @@
 @echo off
 
 :start
+REM CenterSelf
 set MYFILES=%USERPROFILE%\AppData\Local\Temp\afolder
 cd "%MYFILES%"
-set ver=2.0
+IF NOT "%cd%"=="%MYFILES%" goto cd-error
+goto variables
+:cd-error
+color 0F
+REM CursorHide
+echo.
+echo.
+echo.
+echo.
+echo.
+echo                     Please execute SuroADB Lite anywhere in %HOMEDRIVE%
+echo.
+echo.
+echo.                     SuroADB Lite cannot run in other drives.
+echo.
+echo.
+echo.
+echo                                         :(
+pause >nul
+exit
+
+:variables
+set ver=2.1
 title SuroADB Lite %ver%
 color 3F
 set bcol=F3
 set hcolor=3F
 set uicol=3F
-
 :: counters
 set entries=0
 set trost=0
@@ -26,7 +48,6 @@ set sdconfig=/sdcard
 set exsdconfig=NOT_SET
 :: wifi mode
 set deviceip=NOT_SET
-
 :: (PATH VARIABLES)
 :: working directory
 set wdre=%MYFILES%
@@ -39,18 +60,18 @@ set exportpackage=no
 :: for file push and pullf
 set pullf=/sdcard
 set pushf=/sdcard
-
 :: for screenrecord
 set dur=30
 set size=Default
 set spath=/sdcard
-
-
-rem CursorHide
+goto daemon
 
 :daemon
 cls
+echo [%TIME%] Executing "adb devices"
 adb devices
+echo [%TIME%] Done.
+goto menu
 
 :menu
 cls
@@ -78,7 +99,7 @@ echo.
 echo.
 echo.
 echo  Advanced :
-call Button 3 5 %bcol% "Check for devices" 26 5 %bcol% "Install apk" 43 5 %bcol% "Uninstall app" 62 5 %bcol% "Package list" 3 9 %bcol% "Pull file/folder from device" 37 9 %bcol% "Push file/folder to device" 3 13 %bcol% "Take a screenshot" 26 13 %bcol% "Record screen" 45 13 4F "Power controls" 3 21 %bcol% "Custom mode" 20 21 %bcol% "ADB Shell mode" 62 21 %bcol% "?" 68 21 %bcol% "@" 74 21 %bcol% "X" X _Box _hover
+call Button 2 5 %bcol% "Check for devices" 24 5 %bcol% "Install apk" 40 5 %bcol% "Uninstall app" 58 5 %bcol% "Package list" 2 9 %bcol% "Pull file/folder from device" 35 9 %bcol% "Push file/folder to device" 2 13 %bcol% "Take a screenshot" 24 13 %bcol% "Record screen" 43 13 4F "Power controls" 2 21 %bcol% "Custom mode" 18 21 %bcol% "ADB Shell mode" 37 21 %bcol% "Wifi mode" 61 21 %bcol% "?" 67 21 %bcol% "@" 73 21 %bcol% "X" X _Box _hover
 GetInput /M %_Box% /H %hcolor%
 cls
 IF %ERRORLEVEL%==1 goto devices
@@ -92,9 +113,10 @@ IF %ERRORLEVEL%==8 goto screenrecord
 IF %ERRORLEVEL%==9 goto powercontrols
 IF %ERRORLEVEL%==10 goto custom
 IF %ERRORLEVEL%==11 goto shell
-IF %ERRORLEVEL%==12 start "%SysRoot%\notepad.exe" "%MYFILES%\suroadb!lite-readme.txt"
-IF %ERRORLEVEL%==13 goto start
-IF %ERRORLEVEL%==14 goto exitpr
+IF %ERRORLEVEL%==12 goto wifi
+IF %ERRORLEVEL%==13 start "%SysRoot%\notepad.exe" "%MYFILES%\suroadb!lite-readme.txt"
+IF %ERRORLEVEL%==14 goto start
+IF %ERRORLEVEL%==15 goto exitpr
 goto menu
 
 :devices
@@ -111,21 +133,7 @@ cls
 color %uicol%
 echo Select the APK for install. Make sure the file name does not contain any spaces.
 rem BrowseFiles
-IF "%result%"=="0" goto menu
-
-call :pkgt %result%
-exit /b
-
-:pkgt
-set pkgname=%~nx1
-
-call :pkgv %result%
-exit /b
-
-:pkgv
-set pkgex=%~x1
-
-IF NOT %pkgex%==.apk echo Error: File is not an APK!
+IF %result%=="0" goto menu
 
 echo Selected : %pkgname%
 echo Installing ...
@@ -148,7 +156,7 @@ echo Enter MENU to go back.
 echo.
 set /p un= : 
 IF /i "%un%"=="MENU" goto menu
-adb uninstall %un%
+adb uninstall "%un%"
 call Button 2 21 FC "                               Back                               " 74 21 %bcol% "@" X _Box _hover
 GetInput /M %_Box% /H 4F
 IF %ERRORLEVEL%==1 goto menu
@@ -285,9 +293,9 @@ goto push-folder
 cls
 color %uicol%
 set sessionid=%random%
-echo Saving screenshot to /sdcard ...
+echo [%TIME%] Saving screenshot to /sdcard
 adb shell screencap "/sdcard/adbscreenshot-%sessionid%.png"
-echo Copying to %USERPROFILE%\Desktop ...
+echo [%TIME%] Copying to %USERPROFILE%\Desktop
 adb pull "/sdcard/adbscreenshot-%sessionid%.png" "%USERPROFILE%\Desktop"
 IF EXIST "%USERPROFILE%\Desktop\adbscreenshot-%sessionid%.png" start "%SysRoot%\explorer.exe" "%USERPROFILE%\Desktop\adbscreenshot-%sessionid%.png"
 cls
@@ -381,7 +389,7 @@ IF %ERRORLEVEL%==3 goto screenrecord
 :screenrecord-custom
 color %uicol%
 cls
-echo Recording the screen for %dur% seconds. Press CTRL+C to stop.
+echo [%TIME%] Recording the screen for %dur% seconds. Press CTRL+C to stop.
 echo File will be saved to %spath%/adbscr-%sessionid%.mp4
 adb shell screenrecord --size %size% --time-limit %dur% --verbose "%spath%/adbscr-%sessionid%.mp4"
 call Button 2 17 %bcol% "Pull video from device" 2 21 FC "                               Back                               " 74 21 %bcol% "@" X _Box _hover
@@ -410,6 +418,22 @@ echo.
 echo.
 echo.
 echo  Choose an option :
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo   Warning: These will execute instantly upon clicking!
 call Button 3 6 %bcol% "Shutdown" 17 6 %bcol% "Reboot" 29 6 F4 "Recovery" 43 6 F4 "Bootloader" 2 21 FC "                               Back                               " 74 21 %bcol% "@" X _Box _hover
 GetInput /M %_Box% /H 3F
 IF %ERRORLEVEL%==1 adb shell reboot -p
@@ -419,10 +443,6 @@ IF %ERRORLEVEL%==4 adb shell reboot bootloader
 IF %ERRORLEVEL%==5 goto menu
 IF %ERRORLEVEL%==6 goto powercontrols
 goto powercontrols
-
-
-
-
 
 
 :custom
@@ -441,6 +461,71 @@ title SuroADB Lite %version% : adb shell mode
 adb shell
 goto shell
 
+:wifi
+set wfmsg=echo.
+:wifi-2
+color %uicol%
+cls
+adb devices
+echo.
+echo.
+echo.
+echo.
+echo.
+echo                     Do you see your device in the list above?
+echo.
+echo.
+echo.
+echo.
+echo.
+echo                    Please ensure only one device is attached.
+echo.
+echo.
+%wfmsg%
+echo.
+echo.
+echo.
+echo.
+call Button 24 10 %bcol% "    YES    " 42 10 %bcol% "    NO    " 2 21 FC "                               Back                               " 74 21 %bcol% "@" X _Box _hover
+GetInput /M %_Box% /H 3F
+IF %ERRORLEVEL%==1 goto wifi-3
+IF %ERRORLEVEL%==2 set wfmsg=echo                You need at least one device attached to continue.
+IF %ERRORLEVEL%==3 goto menu
+IF %ERRORLEVEL%==4 goto wifi
+goto wifi-2
+:wifi-3
+color %uicol%
+cls
+echo [%TIME%] Executing "adb tcpip 5555"
+adb tcpip 5555
+echo [%TIME%] Done. Please disconnect your device from the USB cable.
+echo.
+echo Enter your device's IP Address.
+echo.
+set /p deviceip= : 
+echo.
+echo [%TIME%] Executing "adb connect %deviceip%:5555"
+adb connect %deviceip%:5555
+echo [%TIME%] Done.
+echo [%TIME%] Executing "adb devices"
+adb devices
+echo [%TIME%] Done.
+echo [%TIME%] If you encounter problems, click the " @ " button to try again.
+echo.
+call Button 2 21 FC "                               Back                               " 74 21 %bcol% "@" X _Box _hover
+GetInput /M %_Box% /H 3F
+IF %ERRORLEVEL%==1 goto menu
+IF %ERRORLEVEL%==2 goto wifi-re
+:wifi-re
+color %uicol%
+cls
+echo [%TIME%] Executing "adb kill-server"
+adb kill-server
+echo [%TIME%] Done.
+echo [%TIME%] Executing "adb devices"
+adb devices
+echo [%TIME%] Done.
+goto wifi-3
 
 :exitpr
 cls
