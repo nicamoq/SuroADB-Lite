@@ -16,11 +16,11 @@ Key Features Include:
 
 SuroADB: https://github.com/nicamoq/SuroADB
 
-<p align="center">
-<h3>SCREENSHOTS<h3>
-  <img src="https://i.ibb.co/c6RpyWp/1.png">
-  <img src="https://i.ibb.co/mSHzG2L/2.png">
-  <img src="https://i.ibb.co/cQPSrGY/3.png">
-  <img src="https://i.ibb.co/4jBdp7H/4.png">
-</p>
+
+<center><h3>SCREENSHOTS<h3></center>
+  <center><img src="https://i.ibb.co/c6RpyWp/1.png"></center>
+  <center><img src="https://i.ibb.co/mSHzG2L/2.png"></center>
+  <center><img src="https://i.ibb.co/cQPSrGY/3.png"></center>
+  <center><img src="https://i.ibb.co/4jBdp7H/4.png"></center>
+
 
