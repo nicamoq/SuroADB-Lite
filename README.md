@@ -18,8 +18,8 @@ Key Features Include:
 
 SuroADB: https://github.com/nicamoq/SuroADB
 
-Screenshots:
 <p align="center">
+<h3>SCREENSHOTS<h3>
   <img src="https://i.ibb.co/c6RpyWp/1.png">
   <img src="https://i.ibb.co/mSHzG2L/2.png">
   <img src="https://i.ibb.co/cQPSrGY/3.png">
