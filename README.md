@@ -2,18 +2,27 @@ SuroADB Lite
 =============================================================
 ABOUT
 
-SuroADB Lite is a reworked user-intuitive version of it's predecessor, SuroADB.
+A reworked user-intuitive version of it's predecessor, SuroADB.
 
-SuroADB is a simple ADB command interface with various features for easy and
-reliable adb command execution. It features auto-restore scripts, error handling,
-an easy-to-read user interface, several settings, and more technical code that
-slightly improves performance and experience.
+Made entirely in batch, SuroADB Lite is an ADB Command Execution GUI that
+uses the ADB Command Line program in a manner that is usable by CMD newbies.
 
-The Lite version lacks added error handling features and does not have
-auto-restoring capabilities, it also lacks global configurations.
+
+Key Features Include:
+<strong
+- Interactive buttons
+- Windows File and Folder selection
+- Step-by-step command customizability
+- Easy to understand dialogue
+</strong>
 
 SuroADB: https://github.com/nicamoq/SuroADB
 
+Screenshots:
 <p align="center">
-  <img src="https://i.ibb.co/MCtM8K4/Suroadblite.png">
+  <img src="https://i.ibb.co/c6RpyWp/1.png">
+  <img src="https://i.ibb.co/mSHzG2L/2.png">
+  <img src="https://i.ibb.co/cQPSrGY/3.png">
+  <img src="https://i.ibb.co/4jBdp7H/4.png">
 </p>
+
