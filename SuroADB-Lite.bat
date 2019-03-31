@@ -26,7 +26,7 @@ pause >nul
 exit
 
 :variables
-set ver=2.1
+set ver=2.2
 title SuroADB Lite %ver%
 color 3F
 set bcol=F3
@@ -133,12 +133,10 @@ cls
 color %uicol%
 echo Select the APK for install. Make sure the file name does not contain any spaces.
 rem BrowseFiles
-IF %result%=="0" goto menu
-
-echo Selected : %pkgname%
+IF "%result%"=="0" goto menu
+echo Selected : %result%
 echo Installing ...
 adb install "%result%"
-
 call Button 2 21 FC "                               Back                               " 74 21 %bcol% "@" X _Box _hover
 GetInput /M %_Box% /H 4F
 IF %ERRORLEVEL%==1 goto menu
@@ -258,6 +256,7 @@ call Button 2 21 FC "                               Back                        
 GetInput /M %_Box% /H 4F
 IF %ERRORLEVEL%==1 goto menu
 IF %ERRORLEVEL%==2 goto push-file
+goto menu
 
 :push-folder
 color %uicol%
@@ -287,7 +286,7 @@ call Button 2 21 FC "                               Back                        
 GetInput /M %_Box% /H 4F
 IF %ERRORLEVEL%==1 goto menu
 IF %ERRORLEVEL%==2 goto push-folder
-goto push-folder
+goto menu
 
 :screenshot
 cls
@@ -358,7 +357,7 @@ goto screenrecord
 :spath-configure
 color %uicol%
 cls
-echo Enter the path where the screen recording should go (avoid spaces!)
+echo Enter the path where the screen recording should go
 echo ex. /sdcard/videos
 echo.
 echo.
@@ -385,6 +384,7 @@ GetInput /M %_Box% /H 4F
 IF %ERRORLEVEL%==1 goto screenrecord-pull
 IF %ERRORLEVEL%==2 goto menu
 IF %ERRORLEVEL%==3 goto screenrecord
+goto menu
 
 :screenrecord-custom
 color %uicol%
@@ -397,7 +397,7 @@ GetInput /M %_Box% /H 4F
 IF %ERRORLEVEL%==1 goto screenrecord-pull
 IF %ERRORLEVEL%==2 goto menu
 IF %ERRORLEVEL%==3 goto screenrecord
-
+goto menu
 
 :screenrecord-pull
 color %uicol%
