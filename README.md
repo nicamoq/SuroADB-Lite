@@ -9,12 +9,10 @@ uses the ADB Command Line program in a manner that is usable by CMD newbies.
 
 
 Key Features Include:
-<strong
 - Interactive buttons
 - Windows File and Folder selection
 - Step-by-step command customizability
 - Easy to understand dialogue
-</strong>
 
 SuroADB: https://github.com/nicamoq/SuroADB
 
