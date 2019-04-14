@@ -26,7 +26,7 @@ pause >nul
 exit
 
 :variables
-set ver=2.2
+set ver=2.3
 title SuroADB Lite %ver%
 color 3F
 set bcol=F3
@@ -99,7 +99,7 @@ echo.
 echo.
 echo.
 echo  Advanced :
-call Button 2 5 %bcol% "Check for devices" 24 5 %bcol% "Install apk" 40 5 %bcol% "Uninstall app" 58 5 %bcol% "Package list" 2 9 %bcol% "Pull file/folder from device" 35 9 %bcol% "Push file/folder to device" 2 13 %bcol% "Take a screenshot" 24 13 %bcol% "Record screen" 43 13 4F "Power controls" 2 21 %bcol% "Custom mode" 18 21 %bcol% "ADB Shell mode" 37 21 %bcol% "Wifi mode" 61 21 %bcol% "?" 67 21 %bcol% "@" 73 21 %bcol% "X" X _Box _hover
+call Button 2 5 %bcol% "Check for devices" 24 5 %bcol% "Install apk" 40 5 %bcol% "Uninstall app" 58 5 %bcol% "Package list" 2 9 %bcol% "Pull file/folder from device" 35 9 %bcol% "Push file/folder to device" 2 13 %bcol% "Take a screenshot" 24 13 %bcol% "Record screen" 43 13 4F "Power controls" 2 21 %bcol% "Custom mode" 18 21 %bcol% "ADB Shell mode" 37 21 %bcol% "Wifi mode" 55 21 %bcol% "*" 61 21 %bcol% "?" 67 21 %bcol% "@" 73 21 %bcol% "X" X _Box _hover
 GetInput /M %_Box% /H %hcolor%
 cls
 IF %ERRORLEVEL%==1 goto devices
@@ -114,9 +114,10 @@ IF %ERRORLEVEL%==9 goto powercontrols
 IF %ERRORLEVEL%==10 goto custom
 IF %ERRORLEVEL%==11 goto shell
 IF %ERRORLEVEL%==12 goto wifi
-IF %ERRORLEVEL%==13 start "%SysRoot%\notepad.exe" "%MYFILES%\suroadb!lite-readme.txt"
-IF %ERRORLEVEL%==14 goto start
-IF %ERRORLEVEL%==15 goto exitpr
+IF %ERRORLEVEL%==13 goto settings
+IF %ERRORLEVEL%==14 start "%SysRoot%\notepad.exe" "%MYFILES%\suroadb!lite-readme.txt"
+IF %ERRORLEVEL%==15 goto start
+IF %ERRORLEVEL%==16 goto exitpr
 goto menu
 
 :devices
@@ -131,11 +132,15 @@ IF %ERRORLEVEL%==2 goto devices
 :install
 cls
 color %uicol%
-echo Select the APK for install. Make sure the file name does not contain any spaces.
+echo Select the APK for install. If errors occur, try renaming them short.
 rem BrowseFiles
+cls
 IF "%result%"=="0" goto menu
-echo Selected : %result%
+color %uicol%
+batbox /c 0x3F /d "Selected : " /c 0x0A /d "%result%" /c 0x3F /d " "
+echo.
 echo Installing ...
+echo.
 adb install "%result%"
 call Button 2 21 FC "                               Back                               " 74 21 %bcol% "@" X _Box _hover
 GetInput /M %_Box% /H 4F
@@ -146,11 +151,13 @@ goto install
 :uninstall
 cls
 color %uicol%
-echo Enter the package name
-echo ex. com.facebook.katana
+echo Enter the package name to uninstall the app associated with it.
+batbox /c 0x3F /d "Example: " /c 0xF3 /d "com.facebook.katana"
 echo.
-echo Enter MENU to go back.
+echo.
+batbox /c 0x3F /d "Enter " /c 0xFC /d "MENU" /c 0x3F /d " to go back.
 :unin
+echo.
 echo.
 set /p un= : 
 IF /i "%un%"=="MENU" goto menu
@@ -169,8 +176,8 @@ adb shell pm list packages
 ) > "%MYFILES%\packages.txt"
 cls
 start "%SysRoot%\notepad.exe" "%MYFILES%\packages.txt"
-echo Package list saved to "%MYFILES%\packages.txt"
-call Button 2 17 %bcol% "Export to text file" 2 21 FC "                               Back                               " 74 21 %bcol% "@" X _Box _hover
+batbox /c 0x3F /d "Package list saved to " /c 0x0A /d "%MYFILES%\packages.txt"
+call Button 2 17 %bcol% "Export to custom path" 2 21 FC "                               Back                               " 74 21 %bcol% "@" X _Box _hover
 GetInput /M %_Box% /H 4F
 IF %ERRORLEVEL%==1 goto package-2
 IF %ERRORLEVEL%==2 goto menu
@@ -234,7 +241,7 @@ color %uicol%
 echo Select the file
 :pushf33
 rem BrowseFiles
-IF %result%=="0" goto menu
+IF "%result%"=="0" goto push
 goto push-file2
 :push-file2
 cls
@@ -265,7 +272,7 @@ set pushff1=folder
 echo Select the folder.
 echo.
 rem BrowseFolder
-IF "%result%"=="0" goto menu
+IF "%result%"=="0" goto push
 goto pushffo
 
 :: FOLDER PUSH
@@ -433,7 +440,7 @@ echo.
 echo.
 echo.
 echo.
-echo   Warning: These will execute instantly upon clicking!
+batbox /c 0x3F /d "  " /c 0x0C /d "Warning: These will execute instantly upon clicking!"
 call Button 3 6 %bcol% "Shutdown" 17 6 %bcol% "Reboot" 29 6 F4 "Recovery" 43 6 F4 "Bootloader" 2 21 FC "                               Back                               " 74 21 %bcol% "@" X _Box _hover
 GetInput /M %_Box% /H 3F
 IF %ERRORLEVEL%==1 adb shell reboot -p
@@ -526,6 +533,68 @@ echo [%TIME%] Executing "adb devices"
 adb devices
 echo [%TIME%] Done.
 goto wifi-3
+
+
+:settings
+cls
+color %uicol%
+echo SuroADB Settings
+echo.
+echo.
+echo  Directories:
+echo.
+echo.
+echo.
+echo.
+echo.
+echo  SuroADB:
+call Button 2 5 %bcol% "TEMP Folder" 2 11 %bcol% "View SuroADB on Github" 30 11 FC "Uninstall SuroADB Lite" 2 21 FC "                               Back                               " 74 21 %bcol% "@" X _Box _hover
+GetInput /M %_Box% /H 3F
+IF %ERRORLEVEL%==1 start "%SysRoot%\explorer.exe" "%MYFILES%"
+IF %ERRORLEVEL%==2 start https://github.com/nicamoq/SuroADB-Lite
+IF %ERRORLEVEL%==3 goto unin-1
+IF %ERRORLEVEL%==4 goto menu
+IF %ERRORLEVEL%==5 settings
+goto settings
+:unin-1
+cls
+color %uicol%
+echo [%TIME%] Killing adb.exe (ADB process)
+taskkill /F /IM adb.exe
+echo [%TIME%] Killing adb.exe (ADB process) (2)
+taskkill /F /IM adb.exe
+echo [%TIME%] Killing GetInput.exe (SuroADB Process)
+taskkill /F /IM GetInput.exe
+ping localhost -n 3 >nul
+echo [%TIME%] Deleting %MYFILES%\adb.exe
+DEL /Q "%MYFILES%\adb.exe"
+echo [%TIME%] Deleting %MYFILES%\AdbWinApi.dll
+DEL /Q "%MYFILES%\AdbWinApi.dll"
+echo [%TIME%] Deleting %MYFILES%\AdbWinUsbApi.dll
+DEL /Q "%MYFILES%\AdbWinUsbApi.dll"
+echo [%TIME%] Deleting %MYFILES%\batbox.exe
+DEL /Q "%MYFILES%\batbox.exe"
+echo [%TIME%] Deleting %MYFILES%\Box.bat
+DEL /Q "%MYFILES%\box.bat"
+echo [%TIME%] Deleting %MYFILES%\Button.bat
+DEL /Q "%MYFILES%\Button.bat"
+echo [%TIME%] Deleting %MYFILES%\fastboot.exe
+DEL /Q "%MYFILES%\fastboot.exe"
+echo [%TIME%] Deleting %MYFILES%\GetInput.exe
+DEL /Q "%MYFILES%\GetInput.exe"
+echo [%TIME%] Deleting %MYFILES%\Getlen.bat
+DEL /Q "%MYFILES%\Getlen.bat"
+echo [%TIME%] Deleting %MYFILES%\license (suroadb).txt
+DEL /Q "%MYFILES%\licence (suroadb).txt"
+echo [%TIME%] Deleting %MYFILES%\license (button).txt
+DEL /Q "%MYFILES%\license (button).txt"
+echo [%TIME%] Deleting %MYFILES%\packages.txt
+IF EXIST "%MYFILES%\packages.txt" DEL /Q "%MYFILES%\packages.txt"
+echo [%TIME%] Deleting %MYFILES%\suroadb!lite-readme.txt
+DEL /Q "%MYFILES%\suroadb!lite-readme.txt
+echo Done.
+pause
+exit
 
 :exitpr
 cls
