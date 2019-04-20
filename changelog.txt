@@ -1,3 +1,7 @@
+SuroADB Lite 2.4 [4/20/19]
+- Added "uninstall.bat" to embedded files
+- Improved the Uninstall, also transferred the script to "uninstall.bat"
+
 SuroADB Lite 2.3 [4/14/19]
 - fixes to File push UI
 - Few UI Improvements (Highlighted outputs, Changed dialogs)

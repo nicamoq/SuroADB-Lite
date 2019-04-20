@@ -26,7 +26,7 @@ pause >nul
 exit
 
 :variables
-set ver=2.3
+set ver=2.4
 title SuroADB Lite %ver%
 color 3F
 set bcol=F3
@@ -556,44 +556,10 @@ IF %ERRORLEVEL%==3 goto unin-1
 IF %ERRORLEVEL%==4 goto menu
 IF %ERRORLEVEL%==5 settings
 goto settings
+
 :unin-1
 cls
-color %uicol%
-echo [%TIME%] Killing adb.exe (ADB process)
-taskkill /F /IM adb.exe
-echo [%TIME%] Killing adb.exe (ADB process) (2)
-taskkill /F /IM adb.exe
-echo [%TIME%] Killing GetInput.exe (SuroADB Process)
-taskkill /F /IM GetInput.exe
-ping localhost -n 3 >nul
-echo [%TIME%] Deleting %MYFILES%\adb.exe
-DEL /Q "%MYFILES%\adb.exe"
-echo [%TIME%] Deleting %MYFILES%\AdbWinApi.dll
-DEL /Q "%MYFILES%\AdbWinApi.dll"
-echo [%TIME%] Deleting %MYFILES%\AdbWinUsbApi.dll
-DEL /Q "%MYFILES%\AdbWinUsbApi.dll"
-echo [%TIME%] Deleting %MYFILES%\batbox.exe
-DEL /Q "%MYFILES%\batbox.exe"
-echo [%TIME%] Deleting %MYFILES%\Box.bat
-DEL /Q "%MYFILES%\box.bat"
-echo [%TIME%] Deleting %MYFILES%\Button.bat
-DEL /Q "%MYFILES%\Button.bat"
-echo [%TIME%] Deleting %MYFILES%\fastboot.exe
-DEL /Q "%MYFILES%\fastboot.exe"
-echo [%TIME%] Deleting %MYFILES%\GetInput.exe
-DEL /Q "%MYFILES%\GetInput.exe"
-echo [%TIME%] Deleting %MYFILES%\Getlen.bat
-DEL /Q "%MYFILES%\Getlen.bat"
-echo [%TIME%] Deleting %MYFILES%\license (suroadb).txt
-DEL /Q "%MYFILES%\licence (suroadb).txt"
-echo [%TIME%] Deleting %MYFILES%\license (button).txt
-DEL /Q "%MYFILES%\license (button).txt"
-echo [%TIME%] Deleting %MYFILES%\packages.txt
-IF EXIST "%MYFILES%\packages.txt" DEL /Q "%MYFILES%\packages.txt"
-echo [%TIME%] Deleting %MYFILES%\suroadb!lite-readme.txt
-DEL /Q "%MYFILES%\suroadb!lite-readme.txt
-echo Done.
-pause
+start "%SysRoot%\cmd.exe" "%MYFILES%\uninstaller.bat"
 exit
 
 :exitpr
