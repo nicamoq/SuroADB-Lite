@@ -1,4 +1,4 @@
-SuroADB Lite
+# SuroADB Lite
 =============================================================
 ABOUT
 
@@ -17,12 +17,11 @@ Key Features Include:
 SuroADB: https://github.com/nicamoq/SuroADB
 
 
-<center><h3>SCREENSHOTS<h3></center>
+<center><h3>SCREENSHOTS<h3
 
 
-<p class="aligncenter">
-  <center><img src="https://i.ibb.co/c6RpyWp/1.png"></center>
-  <center><img src="https://i.ibb.co/mSHzG2L/2.png"></center>
-  <center><img src="https://i.ibb.co/cQPSrGY/3.png"></center>
-  <center><img src="https://i.ibb.co/4jBdp7H/4.png"></center>
-</p>
+
+![SuroADB Lite](https://i.ibb.co/c6RpyWp/1.png)
+![SuroADB Lite](https://i.ibb.co/mSHzG2L/2.png)
+![SuroADB Lite](https://i.ibb.co/cQPSrGY/3.png)
+![SuroADB Lite](https://i.ibb.co/4jBdp7H/4.png)
