@@ -1,4 +1,7 @@
-SuroADB Lite
+SuroADB Lite 2.5
+
+platform-tools version:
+platform-tools_r30.0.3-windows
 =============================================================
 ABOUT
 
@@ -10,12 +13,13 @@ an easy-to-read user interface, several settings, and more technical code that
 slightly improves performance and experience.
 
 The Lite version lacks added error handling features and does not have
-auto-restoring capabilities, it also lacks global configurations.
+auto-restoring capabilities, but future versions will slowly add the feature set of SuroADB.
 
 
 ADB is not made by Kutsuro (Matt) and is present for the purpose of functionality
 for SuroADB. The adb windows zip (platform-tools)  is not  modified and is
 taken straight from the android developer sdk.
+
 
 Note: Please do not re-release the raw SuroADB script and claim it as your own creation.
           If  you're  going to  modify  and/or  add  new  features,  please  provide credit to the
@@ -29,13 +33,12 @@ Website:
 https://kutsuro.simdif.com
 
 Contact:
-hsudoru@gmail.com
+https://kutsuro.simdif.com/contact.html
 
-2019 Matt Rentaro.
+© 2019-2020 Matt Rentaro
 
 ===============================================================
 NOTICE:
 
 SuroADB, SuroADB Lite, batbox, button, and related software
-included in this program is covered under the GNU General Public License, with the
-exception of adb itself.
+included in this program is covered under the GNU General Public License.
