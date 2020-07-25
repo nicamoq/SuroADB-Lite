@@ -1,8 +1,6 @@
 @echo off
 Setlocal Enabledelayedexpansion
 
-REM Checking important files...
-FOR %%A In (batbox.exe Getlen.bat Box.bat) DO (IF Not Exist "%%A" (Echo. Button Function, Error... File [%%A] is Missing...))
 Set _Ver=2.0
 
 
