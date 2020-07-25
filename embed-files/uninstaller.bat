@@ -4,7 +4,6 @@ cd
 set MYFILES=%USERPROFILE%\AppData\Local\Temp\afolder
 title SuroADB Lite Uninstaller
 cls
-color 3F
 :unin-2
 cls
 echo Killing SuroADB processes (1/3)
@@ -23,8 +22,9 @@ DEL /Q "%MYFILES%\Button.bat"
 DEL /Q "%MYFILES%\fastboot.exe"
 DEL /Q "%MYFILES%\GetInput.exe"
 DEL /Q "%MYFILES%\Getlen.bat"
-DEL /Q "%MYFILES%\licence (suroadb).txt"
+DEL /Q "%MYFILES%\license (suroadb).txt"
 DEL /Q "%MYFILES%\license (button).txt"
+DEL /Q "%MYFILES%\suroadblite-config.bat"
 IF EXIST "%MYFILES%\packages.txt" DEL /Q "%MYFILES%\packages.txt"
 DEL /Q "%MYFILES%\suroadb!lite-readme.txt
 RMDIR /S /Q "%USERPROFILE%\AppData\Local\Temp\ytmp"
@@ -41,8 +41,9 @@ IF EXIST "%MYFILES%\Button.bat" goto fail
 IF EXIST "%MYFILES%\fastboot.exe" goto fail
 IF EXIST "%MYFILES%\GetInput.exe" goto fail
 IF EXIST "%MYFILES%\Getlen.bat" goto fail
-IF EXIST "%MYFILES%\licence (suroadb).txt" goto fail
+IF EXIST "%MYFILES%\license (suroadb).txt" goto fail
 IF EXIST "%MYFILES%\license (button).txt" goto fail
+IF EXIST "%MYFILES%\suroadblite-config.bat" goto fail
 IF EXIST "%MYFILES%\packages.txt" goto fail
 IF EXIST "%MYFILES%\suroadb!lite-readme.txt" goto fail
 IF EXIST "%USERPROFILE%\AppData\Local\Temp\ytmp" goto fail-2
@@ -54,8 +55,8 @@ echo SuroADB Lite has been uninstalled succesfully.
 echo.
 echo Press any key to close.
 pause >nul
-DEL /Q uninstaller.bat
-exit
+cls
+goto done
 
 :fail
 start "%SysRoot%\explorer.exe" "%MYFILES%"
@@ -66,8 +67,8 @@ echo Please delete remaining files in the temp folder.
 echo.
 echo Press any key to close.
 pause >nul
-DEL /Q uninstaller.bat
-exit
+cls
+goto done
 
 :fail-2
 start "%SysRoot%\explorer.exe" "%USERPROFILE%\AppData\Local\Temp\ytmp"
@@ -80,5 +81,9 @@ echo Please close any SuroADB related processes.
 echo.
 echo Press any key to close.
 pause >nul
-DEL /Q uninstaller.bat
-exit
+cls
+goto done
+
+:done
+cls
+DEL /Q uninstaller.bat && exit

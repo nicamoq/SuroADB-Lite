@@ -1,7 +1,5 @@
 @Echo off
 
-REM Checking important files...
-FOR %%A In (batbox.exe) DO (IF Not Exist "%%A" (Echo. Box Function, Error... File [%%A] is Missing...))
 Set _Ver=4.0
 
 ::The following Function is created by kvc...don't modify it...if you don't know what are you doing...
@@ -21,7 +19,7 @@ rem :: Unwanted parameters are removed ... (i.e. Dialogue Box...) Make the color
 
 rem #kvc
 
-rem :: Visit https://batchprogrammers.blogspot.com for more extensions / plug-ins like this.... :]
+rem :: Visit www.thebateam.org for more extensions / plug-ins like this.... :]
 rem #TheBATeam
 
 If /i "%~1" == "" (goto :help)
@@ -186,6 +184,6 @@ echo. ver		= Version of Box function
 echo.
 echo. This version 4.0 of Box function contains much more GUI Capabilities.
 echo. As it uses batbox.exe and calls it only once at the end of calculation...
-echo. Visit https://batchprogrammers.blogspot.com for more...
+echo. Visit www.thebateam.org for more...
 echo. #Kvc with #TheBATeam
 goto :eof
