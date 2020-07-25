@@ -1,13 +1,9 @@
 # SuroADB Lite
-=============================================================
 
-ABOUT
-
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/nicamoq/suroadb-lite) ![SourceForge](https://img.shields.io/sourceforge/dm/suroadb-lite)
 A reworked user-intuitive version of it's predecessor, SuroADB.
 
-Made entirely in batch, SuroADB Lite is an ADB Command Execution GUI that
-uses the ADB Command Line program in a manner that is usable by CMD newbies.
-
+Made entirely in batch, SuroADB Lite is an ADB Command Execution GUI that uses the ADB Command Line program in a manner that is usable by CMD newbies.
 
 Key Features Include:
 - Interactive buttons
@@ -17,12 +13,4 @@ Key Features Include:
 
 SuroADB: https://github.com/nicamoq/SuroADB
 
-
-<center><h3>SCREENSHOTS<h3
-
-
-
-![SuroADB Lite](https://i.ibb.co/c6RpyWp/1.png)
-![SuroADB Lite](https://i.ibb.co/mSHzG2L/2.png)
-![SuroADB Lite](https://i.ibb.co/cQPSrGY/3.png)
-![SuroADB Lite](https://i.ibb.co/4jBdp7H/4.png)
+![SuroADB Lite 2.5](https://i.ibb.co/3TgnW5m/Suro-ADB-1.png)
