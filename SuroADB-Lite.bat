@@ -1,8 +1,8 @@
 @echo off
 
 mode con: cols=80 lines=25
-set ver=2.5
-set releaseNumber=7
+set ver=2.6
+set releaseNumber=8
 set sessionid=%random%
 title SuroADB Lite %ver%
 set MYFILES=%USERPROFILE%\AppData\Local\Temp\afolder
@@ -135,7 +135,7 @@ IF %ERRORLEVEL% == 11 goto :shell
 IF %ERRORLEVEL% == 12 goto :wifi
 IF %ERRORLEVEL% == 13 goto :settings
 IF %ERRORLEVEL% == 14 start "%SysRoot%\notepad.exe" "%MYFILES%\suroadb!lite-readme.txt"
-IF %ERRORLEVEL% == 15 goto :start
+IF %ERRORLEVEL% == 15 goto :start-op
 IF %ERRORLEVEL% == 16 goto :exitpr
 goto menu
 
