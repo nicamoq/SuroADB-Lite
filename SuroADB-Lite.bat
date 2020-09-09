@@ -258,15 +258,15 @@ IF %ERRORLEVEL% == 1 goto :push-file
 IF %ERRORLEVEL% == 2 goto :push-folder
 IF %ERRORLEVEL% == 3 goto :menu
 IF %ERRORLEVEL% == 4 goto :push
-goto push
+goto :push
 :push-file
 cls
 color %uicolor%
 echo Select the file
 :pushf33
 rem BrowseFiles
-IF "%result%" == "0" goto :push
-goto push-file2
+IF %result% == "0" goto :push
+goto :push-file2
 :push-file2
 cls
 echo Selected: %result%
@@ -276,13 +276,13 @@ echo ex. /sdcard/files
 echo.
 set /p pushf= : 
 cls
-goto push-file3
+goto :push-file3
 :push-file3
 cls
 echo Copying: %result%
 echo To: %pushf%
 echo.
-adb push "%result%" "%pushf%"
+adb push %result% "%pushf%"
 call Button 2 21 %navcolor% "                               Back                               " 74 21 %buttoncolor% "@" X _Box _hover
 GetInput /M %_Box% /H %highlightcolor%
 IF %ERRORLEVEL% == 1 goto :menu
