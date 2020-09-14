@@ -11,6 +11,7 @@ IF NOT "%cd%" == "%MYFILES%" goto :cd-error
 goto :start-op
 
 :cd-error
+cls
 color 0F
 REM CursorHide
 echo.
@@ -29,7 +30,30 @@ echo                                         :(
 pause >nul
 exit
 
+:incompleteFiles
+cls
+color 0F
+REM CursorHide
+echo.
+echo.
+echo.
+echo.
+echo.
+echo              One or more files are missing from the working directory.
+echo.
+echo.
+echo.                     Try executing SuroADB-Lite.exe again.
+echo.
+echo.
+echo.
+echo                                        :(
+pause >nul
+exit
+
+
 :start-op
+IF NOT EXIST "%MYFILES%\adb.exe" goto :incompleteFiles
+IF NOT EXIST "%MYFILES%\Button.bat" goto :incompleteFiles
 IF EXIST "%MYFILES%\suroadblite-config.bat" (call "%MYFILES%\suroadblite-config.bat" && goto :DaemonStart) else (goto :create-config)
 
 :create-config
@@ -157,7 +181,7 @@ color %uicolor%
 echo Select the APK for install. If errors occur, try renaming short and without spaces.
 rem BrowseFiles
 cls
-IF "%result%" == "0" goto :menu
+IF %result% == "0" goto :menu
 color %uicolor%
 batbox /c 0x%uicolor% /d "Selected : " /c 0x%texthighlight% /d "%result%" /c 0x%uicolor% /d " "
 echo.
@@ -296,7 +320,7 @@ set pushff1=folder
 echo Select the folder.
 echo.
 rem BrowseFolder
-IF "%result%" == "0" goto :push
+IF "%result%" == "0"  goto :push
 goto pushffo
 
 :: FOLDER PUSH
