@@ -1,3 +1,10 @@
+SuroADB Lite 2.6 [N/A]
+- Added connected device info in the main menu
+- Added a few error messages to prevent errors
+- Fixed the refresh (@) button
+- Fixed the file push command (Now supports spaces in files)
+
+
 SuroADB Lite 2.5 [7/25/20]
 - Added Dark theme in Settings
 - Added "Kill adb on exit" in Settings

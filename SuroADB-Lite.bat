@@ -54,7 +54,11 @@ exit
 :start-op
 IF NOT EXIST "%MYFILES%\adb.exe" goto :incompleteFiles
 IF NOT EXIST "%MYFILES%\Button.bat" goto :incompleteFiles
-IF EXIST "%MYFILES%\suroadblite-config.bat" (call "%MYFILES%\suroadblite-config.bat" && goto :DaemonStart) else (goto :create-config)
+IF EXIST "%MYFILES%\suroadblite-config.bat" call "%MYFILES%\suroadblite-config.bat" && goto :DaemonStart
+IF NOT EXIST "%MYFILES%\suroadblite-config.bat" goto :create-config
+echo Weird.. The logic did not work..
+pause
+exit
 
 :create-config
 (
@@ -116,13 +120,34 @@ adb devices
 echo [%TIME%] Done.
 goto :menu
 
-:menu
-cls
-echo What would you like to do?
-goto :menubuttons
+:getDevices
+(
+adb devices
+) > devices.txt
+IF NOT EXIST "%MYFILES%\devices.txt" (set deviceInfo=Unable to get device info.)
+for /f %%a in ('findstr /E "device" devices.txt ^| find /c /v ""') do set deviceCount=%%a
+if "%deviceCount%" GTR "1" (set deviceInfo=%deviceCount% devices connected. ADB may not work properly.)
+if "%deviceCount%" LSS "1" (set deviceInfo=No device connected.)
+if "%deviceCount%" EQU "1" (goto :deviceConnected)
+goto :menu-2
 
-:menubuttons
+:deviceConnected
+set adbdevices=adb devices
+cls
+for /f %%G IN ('%adbdevices% ^|find "device"') do (set deviceInfo=%%G connected)
+goto :EOF
+
+:menu
 color %uicolor%
+call :getDevices
+goto :menu-2
+
+:menu-2
+cls
+batbox /c 0x%uicolor% /d "What would you like to do?  " /c 0x%texthighlight% /d " %deviceInfo% " /c 0x%uicolor% /d ""
+goto :menu-buttons
+
+:menu-buttons
 echo.
 echo.
 echo  ADB Commands :
@@ -159,7 +184,7 @@ IF %ERRORLEVEL% == 11 goto :shell
 IF %ERRORLEVEL% == 12 goto :wifi
 IF %ERRORLEVEL% == 13 goto :settings
 IF %ERRORLEVEL% == 14 start "%SysRoot%\notepad.exe" "%MYFILES%\suroadb!lite-readme.txt"
-IF %ERRORLEVEL% == 15 goto :start-op
+IF %ERRORLEVEL% == 15 goto :DaemonStart
 IF %ERRORLEVEL% == 16 goto :exitpr
 goto menu
 
