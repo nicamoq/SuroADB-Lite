@@ -1,4 +1,4 @@
-SuroADB Lite 2.5
+SuroADB Lite 2.6
 
 platform-tools version:
 platform-tools_r30.0.3-windows
@@ -30,10 +30,10 @@ Github:
 https://github.com/nicamoq/SuroADB-Lite
 
 Website:
-https://kutsuro.simdif.com
+https://nicamoq.github.io/SuroADB-Lite
 
 Contact:
-https://kutsuro.simdif.com/contact.html
+https://forms.gle/qx572HuvgWNmdFvM6
 
 © 2019-2020 Matt Rentaro
 

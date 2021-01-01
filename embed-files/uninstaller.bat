@@ -26,6 +26,7 @@ DEL /Q "%MYFILES%\license (suroadb).txt"
 DEL /Q "%MYFILES%\license (button).txt"
 DEL /Q "%MYFILES%\suroadblite-config.bat"
 IF EXIST "%MYFILES%\packages.txt" DEL /Q "%MYFILES%\packages.txt"
+IF EXIST "%MYFILES%\devices.txt" DEL /Q "%MYFILES%\devices.txt"
 DEL /Q "%MYFILES%\suroadb!lite-readme.txt
 RMDIR /S /Q "%USERPROFILE%\AppData\Local\Temp\ytmp"
 goto unin-4
@@ -45,6 +46,7 @@ IF EXIST "%MYFILES%\license (suroadb).txt" goto fail
 IF EXIST "%MYFILES%\license (button).txt" goto fail
 IF EXIST "%MYFILES%\suroadblite-config.bat" goto fail
 IF EXIST "%MYFILES%\packages.txt" goto fail
+IF EXIST "%MYFILES%\devices.txt" goto fail
 IF EXIST "%MYFILES%\suroadb!lite-readme.txt" goto fail
 IF EXIST "%USERPROFILE%\AppData\Local\Temp\ytmp" goto fail-2
 goto success

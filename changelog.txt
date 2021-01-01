@@ -1,8 +1,12 @@
-SuroADB Lite 2.6 [N/A]
+SuroADB Lite 2.6 [1/1/21]
+- Added setting to input custom seconds for screen recording
 - Added connected device info in the main menu
-- Added a few error messages to prevent errors
+- Added a few error messages
+- Added dates to package list, screenshot and screen recording files on export
+- Improved the initial setup for "WIFI" mode
 - Fixed the refresh (@) button
 - Fixed the file push command (Now supports spaces in files)
+- Minor dialog and filename changes
 
 
 SuroADB Lite 2.5 [7/25/20]

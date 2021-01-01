@@ -6,6 +6,10 @@ set releaseNumber=8
 set sessionid=%random%
 title SuroADB Lite %ver%
 set MYFILES=%USERPROFILE%\AppData\Local\Temp\afolder
+
+:: Gets the current date, format depends on the current system settings.
+for /f "tokens=1-3 delims=/" %%A in ("%DATE%")  do set current-date=%%B-%%A-%%C
+
 cd "%MYFILES%"
 IF NOT "%cd%" == "%MYFILES%" goto :cd-error
 goto :start-op
@@ -129,7 +133,7 @@ for /f %%a in ('findstr /E "device" devices.txt ^| find /c /v ""') do set device
 if "%deviceCount%" GTR "1" (set deviceInfo=%deviceCount% devices connected. ADB may not work properly.)
 if "%deviceCount%" LSS "1" (set deviceInfo=No device connected.)
 if "%deviceCount%" EQU "1" (goto :deviceConnected)
-goto :menu-2
+goto :EOF
 
 :deviceConnected
 set adbdevices=adb devices
@@ -138,6 +142,8 @@ for /f %%G IN ('%adbdevices% ^|find "device"') do (set deviceInfo=%%G connected)
 goto :EOF
 
 :menu
+cls
+title SuroADB Lite %ver%
 color %uicolor%
 call :getDevices
 goto :menu-2
@@ -167,7 +173,7 @@ echo.
 echo.
 echo.
 echo  Advanced :
-call Button 2 5 %buttoncolor% "Check for devices" 24 5 %buttoncolor% "Install apk" 40 5 %buttoncolor% "Uninstall app" 58 5 %buttoncolor% "Package list" 2 9 %buttoncolor% "Pull file/folder from device" 35 9 %buttoncolor% "Push file/folder to device" 2 13 %buttoncolor% "Take a screenshot" 24 13 %buttoncolor% "Record screen" 43 13 %criticalbutton% "Power controls" 2 21 %buttoncolor% "Custom mode" 18 21 %buttoncolor% "ADB Shell mode" 37 21 %buttoncolor% "Wifi mode" 55 21 %buttoncolor% "*" 61 21 %buttoncolor% "?" 67 21 %buttoncolor% "@" 73 21 %buttoncolor% "X" X _Box _hover
+call Button 2 5 %buttoncolor% "Check for devices" 24 5 %buttoncolor% "Install apk" 40 5 %buttoncolor% "Uninstall app" 58 5 %buttoncolor% "Package list" 2 9 %buttoncolor% "Pull file/folder from device" 35 9 %buttoncolor% "Push file/folder to device" 2 13 %buttoncolor% "Take a screenshot" 24 13 %buttoncolor% "Record screen" 42 13 %criticalbutton% "Power controls" 2 21 %buttoncolor% "Custom mode" 18 21 %buttoncolor% "ADB Shell mode" 37 21 %buttoncolor% "Wifi mode" 55 21 %buttoncolor% "*" 61 21 %buttoncolor% "?" 67 21 %buttoncolor% "@" 73 21 %buttoncolor% "X" X _Box _hover
 GetInput /M %_Box% /H %highlightcolor%
 cls
 IF %ERRORLEVEL% == 1 goto :devices
@@ -264,8 +270,8 @@ REM BrowseFolder
 IF "%result%" == "0" goto menu
 (
 	adb shell pm list packages
-) > "%result%\adbpackagelist-%sessionid%.txt"
-start "%SysRoot%\notepad.exe" "%result%\adbpackagelist-%sessionid%.txt"
+) > "%result%\ADBPKG-%current-date%-%sessionid%.txt"
+start "%SysRoot%\notepad.exe" "%result%\ADBPKG-%current-date%-%sessionid%.txt"
 goto menu
 
 :pull
@@ -372,11 +378,11 @@ goto :menu
 cls
 color %uicolor%
 set sessionid=%random%
-echo [%TIME%] Saving screenshot to /sdcard
-adb shell screencap "/sdcard/adbscreenshot-%sessionid%.png"
+echo [%TIME%] Saving screenshot (%current-date%-%sessionid%) to /sdcard
+adb shell screencap "/sdcard/ADBSC-%current-date%-%sessionid%.png"
 echo [%TIME%] Copying to %USERPROFILE%\Desktop
-adb pull "/sdcard/adbscreenshot-%sessionid%.png" "%USERPROFILE%\Desktop"
-IF EXIST "%USERPROFILE%\Desktop\adbscreenshot-%sessionid%.png" start "%SysRoot%\explorer.exe" "%USERPROFILE%\Desktop\adbscreenshot-%sessionid%.png"
+adb pull "/sdcard/ADBSC-%current-date%-%sessionid%.png" "%USERPROFILE%\Desktop"
+IF EXIST "%USERPROFILE%\Desktop\ADBSC-%current-date%-%sessionid%.png" start "%SysRoot%\explorer.exe" "%USERPROFILE%\Desktop\ADBSC-%current-date%-%sessionid%.png"
 cls
 goto menu
 
@@ -406,7 +412,7 @@ echo.
 echo.
 echo.
 echo.
-call Button 3 5 %buttoncolor% "10" 11 5 %buttoncolor% "30" 19 5 %buttoncolor% "1 Minute" 33 5 %buttoncolor% "2 Minutes" 48 5 %buttoncolor% "3 Minutes (Maximum)" 3 11 %buttoncolor% "Device default" 23 11 %buttoncolor% "480x800" 36 11 %buttoncolor% "720x1280" 50 11 %buttoncolor% "1080x1920" 3 17 %buttoncolor% "/sdcard" 16 17 %criticalbutton% "Configure" 60 17 A0 "START RECORDING" 2 21 %navcolor% "                               Back                               " 74 21 %buttoncolor% "@" X _Box _hover
+call Button 3 5 %buttoncolor% "10" 11 5 %buttoncolor% "30" 19 5 %buttoncolor% "1 Minute" 33 5 %buttoncolor% "2 Minutes" 48 5 %buttoncolor% "3 Minutes (Maximum)" 73 5 %criticalbutton% "*" 3 11 %buttoncolor% "Device default" 23 11 %buttoncolor% "480x800" 36 11 %buttoncolor% "720x1280" 50 11 %buttoncolor% "1080x1920" 3 17 %buttoncolor% "/sdcard" 16 17 %criticalbutton% "*" 60 17 A0 "START RECORDING" 2 21 %navcolor% "                               Back                               " 74 21 %buttoncolor% "@" X _Box _hover
 GetInput /M %_Box% /H %highlightcolor%
 
 cls
@@ -417,23 +423,44 @@ IF %ERRORLEVEL% == 2 set dur=30
 IF %ERRORLEVEL% == 3 set dur=60
 IF %ERRORLEVEL% == 4 set dur=120
 IF %ERRORLEVEL% == 5 set dur=180
+IF %ERRORLEVEL% == 6 goto :duration-button-configure
 
 :resolution-button
-IF %ERRORLEVEL% == 6 set size=Default
-IF %ERRORLEVEL% == 7 set size=480x800
-IF %ERRORLEVEL% == 8 set size=720x1280
-IF %ERRORLEVEL% == 9 set size=1080x1920
+IF %ERRORLEVEL% == 7 set size=Default
+IF %ERRORLEVEL% == 8 set size=480x800
+IF %ERRORLEVEL% == 9 set size=720x1280
+IF %ERRORLEVEL% == 10 set size=1080x1920
 
 :spath
-IF %ERRORLEVEL% == 10 set spath=/sdcard
-IF %ERRORLEVEL% == 11 goto :spath-configure
+IF %ERRORLEVEL% == 11 set spath=/sdcard
+IF %ERRORLEVEL% == 12 goto :spath-configure
 
 :sr-ui-buttons
-IF %ERRORLEVEL% == 12 goto :screenrecord-start
-IF %ERRORLEVEL% == 13 goto :menu
-IF %ERRORLEVEL% == 14 goto :screenrecord
+IF %ERRORLEVEL% == 13 goto :screenrecord-start
+IF %ERRORLEVEL% == 14 goto :menu
+IF %ERRORLEVEL% == 15 goto :screenrecord
 call :set-config
 goto :screenrecord
+
+:duration-button-configure
+color %uicolor%
+cls
+echo Enter the number of seconds the screen recording will go for
+echo Note: Maximum of 180 Seconds, or 3 Minutes.
+echo.
+batbox /c 0x%uicolor% /d "Enter " /c 0x%texthighlight% /d " MENU " /c 0x%uicolor% /d " to go back to screenrecord settings."
+echo.
+echo.
+echo. %duration-prompt%
+echo.
+set /p durp= : 
+IF /i "%durp%" == "menu" goto :screenrecord
+IF /I %durp% LSS 1 (set duration-prompt=Please input a valid number!) && (goto :duration-button-configure)
+IF /I %durp% GTR 180 (set duration-prompt=Please input a valid number!) && (goto :duration-button-configure)
+IF /I %durp% LEQ 180 (set dur=%durp%) && (call :set-config) && (goto :screenrecord)
+set duration-prompt=Please input a valid number!
+goto :duration-button-configure
+
 
 :spath-configure
 color %uicolor%
@@ -460,21 +487,21 @@ IF "%size%" == "Default" (goto :screenrecord-default) else (goto :screenrecord-c
 color %uicolor%
 cls
 echo Recording the screen for %dur% seconds. Press CTRL+C to stop.
-echo File will be saved to %spath%/adbscr-%sessionid%.mp4
-adb shell screenrecord --time-limit %dur% --verbose "%spath%/adbscr-%sessionid%.mp4"
+echo File will be saved to %spath%/ADBSR-%current-date%-%sessionid%.mp4
+adb shell screenrecord --time-limit %dur% --verbose "%spath%/ADBSR-%current-date%-%sessionid%.mp4"
 call Button 2 17 %buttoncolor% "Pull video from device" 2 21 %navcolor% "                               Back                               " 74 21 %buttoncolor% "@" X _Box _hover
 GetInput /M %_Box% /H %highlightcolor%
-IF %ERRORLEVEL% == 1 goto screenrecord-pull
-IF %ERRORLEVEL% == 2 goto menu
-IF %ERRORLEVEL% == 3 goto screenrecord
+IF %ERRORLEVEL% == 1 goto :screenrecord-pull
+IF %ERRORLEVEL% == 2 goto :menu
+IF %ERRORLEVEL% == 3 goto :screenrecord
 goto menu
 
 :screenrecord-custom
 color %uicolor%
 cls
 echo [%TIME%] Recording the screen for %dur% seconds. Press CTRL+C to stop.
-echo File will be saved to %spath%/adbscr-%sessionid%.mp4
-adb shell screenrecord --size %size% --time-limit %dur% --verbose "%spath%/adbscr-%sessionid%.mp4"
+echo File will be saved to %spath%/ADBSR-%current-date%-%sessionid%.mp4
+adb shell screenrecord --size %size% --time-limit %dur% --verbose "%spath%/ADBSR-%current-date%-%sessionid%.mp4"
 call Button 2 17 %buttoncolor% "Pull video from device" 2 21 %navcolor% "                               Back                               " 74 21 %buttoncolor% "@" X _Box _hover
 GetInput /M %_Box% /H %highlightcolor%
 IF %ERRORLEVEL% == 1 goto :screenrecord-pull
@@ -489,8 +516,8 @@ echo Where to save?
 REM BrowseFolder
 cls
 IF "%result%" == "0" goto :menu
-adb pull "%spath%/adbscr-%sessionid%.mp4" "%result%"
-start "%SysRoot%\explorer.exe" "%result%\adbscr-%sessionid%.mp4"
+adb pull "%spath%/ADBSR-%current-date%-%sessionid%.mp4" "%result%"
+start "%SysRoot%\explorer.exe" "%result%\ADBSR-%current-date%-%sessionid%.mp4"
 goto menu
 
 :powercontrols
@@ -516,7 +543,7 @@ echo.
 echo.
 echo.
 echo.
-batbox /c 0x%uicolor% /d "  " /c 0x%textcritical% /d "Warning: These will execute instantly upon clicking!"
+batbox /c 0x%uicolor% /d "  " /c 0x%textcritical% /d "Be careful! These will execute instantly upon input."
 call Button 3 6 %buttoncolor% "Shutdown" 17 6 %buttoncolor% "Reboot" 29 6 %criticalbutton% "Recovery" 43 6 %criticalbutton% "Bootloader" 2 21 %navcolor% "                               Back                               " 74 21 %buttoncolor% "@" X _Box _hover
 GetInput /M %_Box% /H %highlightcolor%
 IF %ERRORLEVEL% == 1 adb shell reboot -p
@@ -550,38 +577,22 @@ adb shell
 goto shell
 
 :wifi
-set wfmsg=echo.
-:wifi-2
-color %uicolor%
+call :getDevices
+if "%deviceCount%" GTR "1" (set wifiInfo=There are %deviceCount% devices connected. Please connect only one via USB, then click "@".) && (goto :wifi-invalid)
+if "%deviceCount%" LSS "1" (set wifiInfo=There are no devices connected. Connect a device via USB then click "@".) && (goto :wifi-invalid)
+if "%deviceCount%" EQU "1" (goto :wifi-3)
+
+:wifi-invalid
 cls
-adb devices
-echo.
-echo.
-echo.
-echo.
-echo.
-echo                     Do you see your device in the list above?
-echo.
-echo.
-echo.
-echo.
-echo.
-echo.
-echo                    Please ensure only one device is attached.
-echo.
-echo.
-%wfmsg%
-echo.
-echo.
-echo.
-echo.
-call Button 24 10 %buttoncolor% "    YES    " 42 10 %buttoncolor% "    NO    " 2 21 %navcolor% "                               Back                               " 74 21 %buttoncolor% "@" X _Box _hover
+echo %wifiInfo%
+call Button 2 17 %buttoncolor% "Cannot find your device?" 2 21 %navcolor% "                               Back                               " 74 21 %buttoncolor% "@" X _Box _hover
 GetInput /M %_Box% /H %highlightcolor%
-IF %ERRORLEVEL% == 1 goto :wifi-3
-IF %ERRORLEVEL% == 2 set wfmsg=batbox /c 0x%uicolor% /d "                    " /c 0x%texthighlight% /d "You need one device attached to continue." /c 0x%uicolor% /d " "
-IF %ERRORLEVEL% == 3 goto :menu
-IF %ERRORLEVEL% == 4 goto :wifi
-goto :wifi-2
+IF %ERRORLEVEL% == 1 start https://github.com/nicamoq/SuroADB-Lite/wiki
+IF %ERRORLEVEL% == 2 goto :menu
+IF %ERRORLEVEL% == 3 goto :wifi
+goto :wifi
+
+
 :wifi-3
 color %uicolor%
 cls
@@ -652,6 +663,7 @@ goto settings
 
 :dark-mode
 IF "%themename%" == "Dark" (goto :default-mode-default) else (goto :dark-mode-dark)
+
 :default-mode-default
 cls
 set themename=Default
