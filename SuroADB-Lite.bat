@@ -1,8 +1,8 @@
 @echo off
 
 mode con: cols=80 lines=25
-set ver=2.6
-set releaseNumber=8
+set ver=2.7
+set releaseNumber=9
 set sessionid=%random%
 title SuroADB Lite %ver%
 set MYFILES=%USERPROFILE%\AppData\Local\Temp\afolder
@@ -67,14 +67,14 @@ exit
 :create-config
 (
 	echo :: GUI Theme
-	echo set themename=Default
-	echo set uicolor=3F
-	echo set buttoncolor=F3
-	echo set highlightcolor=3F
-	echo set navcolor=FC
+	echo set themename=Dark
+	echo set uicolor=0F
+	echo set buttoncolor=8F
+	echo set highlightcolor=70
+	echo set navcolor=8F
 	echo set criticalbutton=4F
 	echo.
-	echo set texthighlight=F3
+	echo set texthighlight=F0
 	echo set textcritical=0C
 	echo.
 	echo :: Screenrecord last used
@@ -84,6 +84,12 @@ exit
 	echo.
 	echo :: ADB settings
 	echo set killadbonexit=1
+	echo.
+	echo :: File push last used
+	echo set fpush-restore=0
+	echo set fpush-type=
+	echo set fpush-apath=
+	echo set fpush-bpath=
 	echo.
 	echo exit /b
 ) > "%MYFILES%\suroadblite-config.bat"
@@ -110,6 +116,12 @@ goto :DaemonStart
 	echo.
 	echo :: ADB Settings
 	echo set killadbonexit=%killadbonexit%
+	echo.
+	echo :: File push last used
+	echo set fpush-restore=%fpush-restore%
+	echo set fpush-type=%fpush-type%
+	echo set fpush-apath=%fpush-apath%
+	echo set fpush-bpath=%fpush-bpath%
 	echo.
 	echo exit /b
 ) > "%MYFILES%\suroadblite-config.bat"
@@ -304,23 +316,57 @@ goto pull
 
 
 :push
+set restore-status=echo.
+IF %fpush-restore% == 1 (set restore-status=echo Last used: %fpush-apath% to %fpush-bpath%)
+:push-2
 cls
 color %uicolor%
-echo What would you like to copy?
-call Button 5 5 %buttoncolor% "          FILE          " 45 5 %buttoncolor% "          FOLDER         " 2 21 %navcolor% "                               Back                               " 74 21 %buttoncolor% "@" X _Box _hover
+echo What would you like to copy to your device?
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+echo.
+%restore-status%
+call Button 5 5 %buttoncolor% "          FILE          " 45 5 %buttoncolor% "          FOLDER         " 26 10 %buttoncolor% " RESTORE LAST SESSION " 2 21 %navcolor% "                               Back                               " 74 21 %buttoncolor% "@" X _Box _hover
 GetInput /M %_Box% /H %highlightcolor%
 IF %ERRORLEVEL% == 1 goto :push-file
 IF %ERRORLEVEL% == 2 goto :push-folder
-IF %ERRORLEVEL% == 3 goto :menu
-IF %ERRORLEVEL% == 4 goto :push
+IF %ERRORLEVEL% == 3 goto :push-restore
+IF %ERRORLEVEL% == 4 goto :menu
+IF %ERRORLEVEL% == 5 goto :push
 goto :push
+
+:push-restore
+cls
+IF %fpush-restore% == 0 (set restore-status=batbox /c 0x%uicolor% /d "                            " /c 0x%texthighlight% /d " No previous session ") && (goto :push-2)
+set result=%fpush-apath%
+set pushf=%fpush-bpath%
+IF %fpush-type% == file (goto :push-file3) ELSE (goto :pushffo-2)
+goto :push
+
+
+
 :push-file
 cls
 color %uicolor%
 echo Select the file
 :pushf33
 rem BrowseFiles
-IF %result% == "0" goto :push
+IF %result% == 0 goto :push
+set fpush-apath=%result%
+call :set-config
+
 goto :push-file2
 :push-file2
 cls
@@ -331,13 +377,20 @@ echo ex. /sdcard/files
 echo.
 set /p pushf= : 
 cls
+set fpush-bpath=%pushf%
+call :set-config
 goto :push-file3
+
 :push-file3
+color %uicolor%
 cls
 echo Copying: %result%
 echo To: %pushf%
 echo.
 adb push %result% "%pushf%"
+set fpush-restore=1
+set fpush-type=file
+call :set-config
 call Button 2 21 %navcolor% "                               Back                               " 74 21 %buttoncolor% "@" X _Box _hover
 GetInput /M %_Box% /H %highlightcolor%
 IF %ERRORLEVEL% == 1 goto :menu
@@ -351,7 +404,9 @@ set pushff1=folder
 echo Select the folder.
 echo.
 rem BrowseFolder
-IF "%result%" == "0"  goto :push
+IF "%result%" == "0" goto :push
+set fpush-apath=%result%
+call :set-config
 goto pushffo
 
 :: FOLDER PUSH
@@ -364,10 +419,20 @@ echo ex. /sdcard/folders
 echo.
 set /p pushf= : 
 cls
+set fpush-bpath=%pushf%
+call :set-config
+goto :pushffo-2
+
+:pushffo-2
+color %uicolor%
+cls
 echo Copying : %result%
 echo To : %pushf%
 echo.
 adb push "%result%" "%pushf%"
+set fpush-restore=1
+set fpush-type=folder
+call :set-config
 call Button 2 21 %navcolor% "                               Back                               " 74 21 %buttoncolor% "@" X _Box _hover
 GetInput /M %_Box% /H %highlightcolor%
 IF %ERRORLEVEL% == 1 goto :menu

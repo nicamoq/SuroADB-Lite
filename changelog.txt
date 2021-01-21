@@ -1,3 +1,9 @@
+SuroADB Lite 2.7 [TBA]
+- Default theme set to Dark mode
+- Added restore last session option for File/Folder push
+- Fixed unable to cancel file selection bug (Displays a 0 upon clicking Cancel)
+
+
 SuroADB Lite 2.6 [1/1/21]
 - Added setting to input custom seconds for screen recording
 - Added connected device info in the main menu
@@ -7,7 +13,6 @@ SuroADB Lite 2.6 [1/1/21]
 - Fixed the refresh (@) button
 - Fixed the file push command (Now supports spaces in files)
 - Minor dialog and filename changes
-
 
 SuroADB Lite 2.5 [7/25/20]
 - Added Dark theme in Settings
