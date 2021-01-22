@@ -14,7 +14,7 @@ Key Features Include:
 
 SuroADB: https://github.com/nicamoq/SuroADB
 
-![SuroADB Lite 2.5](https://i.ibb.co/3TgnW5m/Suro-ADB-1.png)
+![SuroADB Lite 2.5](https://github.com/nicamoq/SuroADB-Lite/blob/gh-pages/assets/images/suroadb-lite.gif)
 
 
 
